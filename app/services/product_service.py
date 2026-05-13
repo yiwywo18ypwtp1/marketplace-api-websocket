@@ -2,9 +2,9 @@ from fastapi import Depends, HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.models import Product
+from app.models import Product, User
 from app.schemas.product_schema import ProductCreate
-from app.models.user import User, UserRole
+from app.models.user import UserRole
 
 async def get_all(db: AsyncSession, max_price: float, min_price: float):
     query = select(Product)
