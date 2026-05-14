@@ -6,6 +6,7 @@ from app.models import Order, User, Product
 from app.models.user import UserRole
 from app.models.order import OrderStatus
 from app.schemas.order_schema import OrderCreate
+from app.celery.email_tasks import send_order_email
 
 
 async def create(
@@ -41,6 +42,8 @@ async def create(
 
     await db.commit()
     await db.refresh(order)
+
+    send_order_email.delay(order.id)
 
     return order
 
