@@ -79,6 +79,12 @@ poetry run uvicorn app.main:app --reload
 celery -A app.celery.celery_app worker --loglevel=info
 ```
 
+## Run tests
+
+```bash
+pytest
+```
+
 ## API Docs
 
 ```txt
