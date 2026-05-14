@@ -3,11 +3,16 @@ from pydantic import BaseModel, ConfigDict
 from app.models.order import OrderStatus
 
 
-class OrderCreate(BaseModel):
+class Order(BaseModel):
     product_id: int
     quantity: int
     buyer_id: int
     total_price: float
+
+
+class OrderCreate(BaseModel):
+    product_id: int
+    quantity: int
 
 
 class OrderResponse(BaseModel):

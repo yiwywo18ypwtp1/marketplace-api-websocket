@@ -28,18 +28,18 @@ async def create(
     if product.stock < data.quantity:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Not enough in stock")
     
-    async with db.begin():
-        product.stock -= data.quantity
+    product.stock -= data.quantity
 
-        order = Order(
-            product_id=data.product_id,
-            quantity=data.quantity,
-            buyer_id=current_user.id,
-            total_price=product.price * data.quantity,
-        )
+    order = Order(
+        product_id=data.product_id,
+        quantity=data.quantity,
+        buyer_id=current_user.id,
+        total_price=product.price * data.quantity,
+    )
 
-        db.add(order)
+    db.add(order)
 
+    await db.commit()
     await db.refresh(order)
 
     return order
@@ -72,10 +72,10 @@ async def cancel(
     if order.status == OrderStatus.cancelled:
         raise HTTPException(status_code=400, detail="Order already cancelled")
 
-    async with db.begin():
-        order.status = OrderStatus.cancelled
-        product.stock += order.quantity
+    order.status = OrderStatus.cancelled
+    product.stock += order.quantity
 
+    await db.commit()
     await db.refresh(order)
 
     return order
